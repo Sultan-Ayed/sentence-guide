@@ -1,1017 +1,435 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الدليل الإرشادي لاختيار المجلات العلمية</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<title>محلل الجملة الإنجليزية — السبورة النحوية</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/compromise@14.14.0/builds/compromise.min.js"></script>
 <style>
-:root {
-  --cream:       #F7F3EE;
-  --cream-dark:  #EDE7DC;
-  --sand:        #D9CEBF;
-  --bark:        #8C7355;
-  --bark-light:  #B09070;
-  --forest:      #3B5E45;
-  --forest-light:#5A8065;
-  --forest-pale: #E4EDE6;
-  --amber:       #C07A28;
-  --amber-pale:  #FBF0DF;
-  --amber-mid:   #EAC07A;
-  --red:         #9B3A3A;
-  --red-pale:    #F7E8E8;
-  --sky:         #2C5F7A;
-  --sky-pale:    #E3EFF5;
-  --sky-light:   #A8C8D8;
-  --ink:         #2A2118;
-  --ink-soft:    #4A3F32;
-  --muted:       #7A6E63;
-  --border:      #D4C8B8;
-  --border-soft: #EAE2D8;
-  --white:       #FDFAF6;
-  --shadow:      rgba(60,40,20,0.08);
+:root{
+  --room:#0E1714;
+  --wood:#6B4226;
+  --wood-dark:#4A2D19;
+  --board:#1B3A2F;
+  --board-edge:#15302587;
+  --chalk:#F2EFE6;
+  --chalk-dim:#C9CDC4;
+  --noun:#FFD166;
+  --verb:#EF6F6C;
+  --adj:#6EC6CA;
+  --gold:#C9A66B;
+  --paper:#FBF7EE;
+  --paper-line:#E4DCC8;
+  --ink:#1F2A33;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  min-height:100vh;
+  background:radial-gradient(ellipse at 50% -10%, #1d2a25 0%, var(--room) 60%);
+  font-family:'IBM Plex Sans Arabic', sans-serif;
+  color:var(--chalk);
+  padding:28px 14px 60px;
+  display:flex;
+  justify-content:center;
+}
+.frame{
+  width:100%;
+  max-width:980px;
+  background:linear-gradient(180deg, var(--wood), var(--wood-dark));
+  border-radius:14px;
+  padding:14px;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.6), inset 0 0 0 2px rgba(0,0,0,.25);
+}
+.board{
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.015) 0 2px, transparent 2px 4px),
+    radial-gradient(ellipse at 20% 10%, #20453799 0%, transparent 50%),
+    var(--board);
+  border-radius:8px;
+  padding:34px 28px 28px;
+  box-shadow:inset 0 0 40px rgba(0,0,0,.45);
+}
+header{ text-align:center; margin-bottom:26px; }
+header h1{
+  font-family:'Reem Kufi', sans-serif;
+  font-weight:700;
+  font-size:clamp(26px,4vw,38px);
+  margin:0 0 8px;
+  color:var(--chalk);
+  text-shadow:0 1px 0 rgba(255,255,255,.08);
+}
+header p{
+  margin:0;
+  color:var(--chalk-dim);
+  font-size:14px;
 }
 
-* { margin:0; padding:0; box-sizing:border-box; }
+/* worksheet (paper clipped to the board) */
+.worksheet{
+  position:relative;
+  background:var(--paper);
+  color:var(--ink);
+  border-radius:3px;
+  padding:22px 22px 18px;
+  max-width:720px;
+  margin:0 auto 28px;
+  box-shadow:0 18px 30px -14px rgba(0,0,0,.55), 0 2px 0 rgba(0,0,0,.1);
+  background-image:repeating-linear-gradient(to bottom, transparent 0 31px, var(--paper-line) 31px 32px);
+}
+.worksheet::before{
+  content:"";
+  position:absolute; top:-12px; left:50%; transform:translateX(-50%) rotate(-2deg);
+  width:78px; height:26px;
+  background:rgba(212,180,90,.55);
+  border:1px solid rgba(150,120,40,.4);
+}
+.worksheet label{
+  display:block;
+  font-weight:600;
+  margin-bottom:8px;
+  font-size:14px;
+  color:#5b4a2c;
+}
+.worksheet textarea{
+  width:100%;
+  min-height:130px;
+  border:none;
+  background:transparent;
+  resize:vertical;
+  font-family:'JetBrains Mono', monospace;
+  font-size:15px;
+  line-height:32px;
+  color:var(--ink);
+  outline:none;
+}
+.worksheet textarea::placeholder{ color:#9a8f73; }
+.actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:6px; flex-wrap:wrap; }
+button{
+  font-family:'IBM Plex Sans Arabic', sans-serif;
+  font-weight:600;
+  font-size:14px;
+  border-radius:6px;
+  padding:10px 18px;
+  cursor:pointer;
+  border:2px dashed var(--gold);
+}
+#analyzeBtn{ background:var(--ink); color:var(--chalk); border-style:solid; border-color:var(--ink);}
+#analyzeBtn:hover{ background:#34495a; }
+#printBtn{ background:transparent; color:var(--gold); }
+#printBtn:hover{ background:rgba(201,166,107,.12); }
 
-html { scroll-behavior: smooth; }
+#results[hidden]{ display:none; }
 
-body {
-  background: var(--cream);
-  color: var(--ink);
-  font-family: 'IBM Plex Sans Arabic', sans-serif;
-  font-size: 15px;
-  line-height: 1.75;
-}
+/* legend */
+.legend{ display:flex; gap:18px; justify-content:center; flex-wrap:wrap; margin-bottom:18px; font-size:13px; color:var(--chalk-dim); }
+.legend span{ display:inline-flex; align-items:center; gap:6px; }
+.legend i{ width:14px; height:14px; border-radius:50%; display:inline-block; }
+.legend .n i{ background:var(--noun);} .legend .v i{ background:var(--verb);} .legend .a i{ background:var(--adj);}
 
-/* ─── TOP BAR ─── */
-.topbar {
-  background: var(--forest);
-  color: #E4EDE6;
-  padding: 10px 40px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 13px;
-  letter-spacing: 0.02em;
-}
-.topbar-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 600;
-  font-size: 14px;
-  color: #E4EDE6;
-}
-.topbar-logo {
-  width: 28px; height: 28px;
-  background: rgba(255,255,255,0.15);
-  border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-}
-.topbar-meta {
-  display: flex; gap: 20px;
-  color: rgba(228,237,230,0.7);
-  font-size: 12px;
-}
-.topbar-meta span { display: flex; align-items: center; gap: 5px; }
+/* annotated passage */
+.annotatedWrap{ background:rgba(255,255,255,.03); border:1px dashed rgba(242,239,230,.25); border-radius:8px; padding:18px 20px; margin-bottom:26px; }
+.annotatedWrap h2, .section h2{ font-family:'Reem Kufi', sans-serif; font-size:18px; margin:0 0 14px; color:var(--gold); }
+#annotated{ direction:ltr; text-align:left; font-family:'JetBrains Mono', monospace; font-size:15px; line-height:2.1; color:var(--chalk); }
+.sentLine{ margin:0 0 10px; }
+.sentNum{ display:inline-block; min-width:20px; margin-inline-end:6px; color:var(--chalk-dim); font-size:12px; }
+.w-noun{ color:var(--noun); text-decoration:underline wavy; text-decoration-thickness:1px; }
+.w-adj{ color:var(--adj); text-decoration:underline; }
+.w-verb{ color:var(--verb); text-decoration:underline dashed; }
 
-/* ─── HERO ─── */
-.hero {
-  background: var(--forest);
-  padding: 56px 40px 48px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -60px; left: -60px;
-  width: 300px; height: 300px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.04);
-  pointer-events: none;
-}
-.hero::after {
-  content: '';
-  position: absolute;
-  bottom: -80px; right: -40px;
-  width: 260px; height: 260px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.04);
-  pointer-events: none;
-}
-.hero-badge {
-  display: inline-block;
-  background: rgba(255,255,255,0.12);
-  color: #C8DFCE;
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 20px;
-  padding: 4px 14px;
-  font-size: 12px;
-  margin-bottom: 18px;
-  letter-spacing: 0.05em;
-}
-.hero h1 {
-  color: #FDFAF6;
-  font-size: 32px;
-  font-weight: 700;
-  line-height: 1.3;
-  margin-bottom: 14px;
-  max-width: 680px;
-  margin-inline: auto;
-}
-.hero p {
-  color: rgba(228,237,230,0.8);
-  font-size: 16px;
-  max-width: 540px;
-  margin: 0 auto 28px;
-  line-height: 1.7;
-}
-.hero-pills {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-}
-.hero-pill {
-  background: rgba(255,255,255,0.1);
-  color: #D0E6D4;
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 20px;
-  padding: 5px 14px;
-  font-size: 12px;
-}
+/* sentence info cards */
+.section{ margin-bottom:28px; }
+.cardGrid{ display:flex; flex-direction:column; gap:10px; }
+.card{ display:flex; gap:12px; background:var(--paper); color:var(--ink); border-radius:6px; padding:12px 14px; box-shadow:0 8px 16px -10px rgba(0,0,0,.5); }
+.cardNum{ font-family:'JetBrains Mono', monospace; font-weight:700; background:var(--ink); color:var(--chalk); border-radius:50%; width:26px; height:26px; flex:0 0 26px; display:flex; align-items:center; justify-content:center; font-size:13px;}
+.cardSentence{ direction:ltr; text-align:left; font-family:'JetBrains Mono', monospace; font-size:14px; margin:0 0 6px; }
+.cardMeta{ margin:0; font-size:13px; color:#4a4032; }
+.enTag{ color:#8a7a55; }
 
-/* ─── NAV ─── */
-.sticky-nav {
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  padding: 0 40px;
-  display: flex;
-  gap: 0;
-  overflow-x: auto;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  box-shadow: 0 1px 6px var(--shadow);
+/* index-card tables */
+.tableCard{
+  position:relative;
+  background:var(--paper);
+  color:var(--ink);
+  border-radius:6px;
+  padding:18px 16px 14px;
+  margin-bottom:22px;
+  box-shadow:0 10px 20px -12px rgba(0,0,0,.55);
 }
-.nav-item {
-  padding: 14px 18px;
-  font-size: 13px;
-  color: var(--muted);
-  cursor: pointer;
-  white-space: nowrap;
-  border-bottom: 2px solid transparent;
-  transition: color 0.2s, border-color 0.2s;
-  text-decoration: none;
+.tableCard::before{
+  content:"";
+  position:absolute; top:-9px; right:24px; transform:rotate(3deg);
+  width:60px; height:18px; background:rgba(212,180,90,.5); border:1px solid rgba(150,120,40,.35);
 }
-.nav-item:hover { color: var(--forest); }
-.nav-item.active { color: var(--forest); border-bottom-color: var(--forest); font-weight: 600; }
+.tableCard h3{ font-family:'Reem Kufi',sans-serif; font-size:16px; margin:0 0 12px; display:flex; align-items:center; gap:8px;}
+.tableCard h3 i{ width:12px; height:12px; border-radius:50%; display:inline-block; }
+table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+thead th{ text-align:start; border-bottom:2px solid var(--ink); padding:6px 8px; font-weight:700;}
+tbody td{ padding:7px 8px; border-bottom:1px solid var(--paper-line); }
+tbody td:first-child, thead th:first-child{ direction:ltr; text-align:left; font-family:'JetBrains Mono', monospace; }
 
-/* ─── LAYOUT ─── */
-.layout {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 40px 32px;
-  display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: 36px;
-  align-items: start;
-}
+footer{ text-align:center; color:var(--chalk-dim); font-size:12px; margin-top:10px; }
 
-/* ─── MAIN CONTENT ─── */
-.main {}
-
-/* ─── SECTION ─── */
-.section {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 32px;
-  margin-bottom: 28px;
-  box-shadow: 0 2px 8px var(--shadow);
-}
-
-.section-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--border-soft);
-}
-.section-icon {
-  width: 40px; height: 40px;
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  flex-shrink: 0;
-}
-.icon-forest { background: var(--forest-pale); }
-.icon-amber  { background: var(--amber-pale); }
-.icon-red    { background: var(--red-pale); }
-.icon-sky    { background: var(--sky-pale); }
-
-.section-title {
-  font-size: 19px;
-  font-weight: 700;
-  color: var(--ink);
-  line-height: 1.3;
-}
-.section-sub {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 2px;
-}
-
-/* ─── ALERT BOXES ─── */
-.alert {
-  border-radius: 10px;
-  padding: 14px 18px;
-  margin: 18px 0;
-  font-size: 14px;
-  line-height: 1.65;
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-}
-.alert-icon { font-size: 18px; margin-top: 1px; flex-shrink: 0; }
-.alert-forest { background: var(--forest-pale); border: 1px solid #B8D4BD; color: var(--forest); }
-.alert-amber  { background: var(--amber-pale);  border: 1px solid var(--amber-mid); color: #7A4E10; }
-.alert-red    { background: var(--red-pale);    border: 1px solid #DDB0B0; color: var(--red); }
-.alert-sky    { background: var(--sky-pale);    border: 1px solid var(--sky-light); color: var(--sky); }
-.alert strong { font-weight: 600; }
-
-/* ─── COMPARE TABLE ─── */
-.compare-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: 14px;
-  margin: 18px 0;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-}
-.compare-table th {
-  background: var(--cream-dark);
-  padding: 11px 16px;
-  text-align: right;
-  font-weight: 600;
-  color: var(--ink-soft);
-  border-bottom: 1px solid var(--border);
-}
-.compare-table th:first-child { background: var(--cream); color: var(--muted); font-weight: 500; }
-.compare-table td {
-  padding: 11px 16px;
-  border-bottom: 1px solid var(--border-soft);
-  color: var(--ink-soft);
-  vertical-align: top;
-  line-height: 1.6;
-}
-.compare-table tr:last-child td { border-bottom: none; }
-.compare-table tr:nth-child(even) td { background: #FDFAF680; }
-.compare-table td:first-child { font-weight: 600; color: var(--bark); background: var(--cream); }
-
-/* ─── WARNING LIST ─── */
-.warn-list { list-style: none; margin: 16px 0; }
-.warn-list li {
-  display: flex;
-  gap: 12px;
-  padding: 13px 16px;
-  margin-bottom: 8px;
-  background: var(--cream);
-  border: 1px solid var(--border-soft);
-  border-right: 4px solid var(--red);
-  border-radius: 0 10px 10px 0;
-  font-size: 14px;
-  color: var(--ink-soft);
-  line-height: 1.6;
-}
-.warn-list li .wi { font-size: 17px; margin-top: 2px; flex-shrink: 0; }
-.warn-list li strong { color: var(--red); display: block; margin-bottom: 2px; }
-
-/* ─── STRATEGY CARDS ─── */
-.strategy-cards { display: grid; gap: 16px; margin: 16px 0; }
-
-.strategy-card {
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-}
-.strategy-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 18px;
-  background: var(--cream-dark);
-  border-bottom: 1px solid var(--border);
-}
-.strategy-num {
-  width: 30px; height: 30px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-.num-forest { background: var(--forest); color: #E4EDE6; }
-.num-amber  { background: var(--amber);  color: white; }
-.num-sky    { background: var(--sky);    color: white; }
-.num-bark   { background: var(--bark);   color: white; }
-
-.strategy-head-title {
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--ink);
-}
-.strategy-head-sub {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 1px;
-}
-.strategy-body {
-  background: var(--white);
-  padding: 18px;
-}
-.strategy-body p {
-  font-size: 14px;
-  color: var(--ink-soft);
-  margin-bottom: 12px;
-  line-height: 1.7;
-}
-.strategy-body p:last-child { margin-bottom: 0; }
-
-/* ─── STEPS ─── */
-.steps { margin: 12px 0; }
-.step-row {
-  display: flex;
-  gap: 14px;
-  margin-bottom: 12px;
-  align-items: flex-start;
-}
-.step-dot {
-  width: 24px; height: 24px;
-  background: var(--forest);
-  border-radius: 50%;
-  color: white;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-.step-text {
-  font-size: 14px;
-  color: var(--ink-soft);
-  line-height: 1.65;
-}
-.step-text strong { color: var(--ink); }
-
-/* ─── CODE BLOCK ─── */
-.code-block {
-  background: #1E2920;
-  border-radius: 10px;
-  padding: 16px 18px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12.5px;
-  color: #C8DFCE;
-  overflow-x: auto;
-  margin: 14px 0;
-  line-height: 1.7;
-  direction: ltr;
-  text-align: left;
-}
-.code-block .cm  { color: #5A7A60; }
-.code-block .kw  { color: #7EC8A4; }
-.code-block .str { color: #E3B96A; }
-.code-block .fn  { color: #A8D4B8; }
-.code-block .num { color: #F0A070; }
-.code-block .url { color: #80C4D8; text-decoration: underline; }
-
-/* ─── LINK CHIP ─── */
-.link-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--sky-pale);
-  color: var(--sky);
-  border: 1px solid var(--sky-light);
-  border-radius: 8px;
-  padding: 5px 12px;
-  font-size: 13px;
-  text-decoration: none;
-  margin: 4px 0;
-  transition: background 0.15s;
-  direction: ltr;
-}
-.link-chip:hover { background: #D0E8F4; }
-
-/* ─── INDICATOR GRID ─── */
-.indicator-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin: 16px 0;
-}
-.indicator-card {
-  background: var(--cream);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px;
-  position: relative;
-  overflow: hidden;
-}
-.indicator-card::before {
-  content: '';
-  position: absolute;
-  top: 0; right: 0;
-  width: 4px;
-  height: 100%;
-  border-radius: 0 12px 12px 0;
-}
-.ind-forest::before { background: var(--forest); }
-.ind-amber::before  { background: var(--amber); }
-.ind-sky::before    { background: var(--sky); }
-.ind-bark::before   { background: var(--bark); }
-.indicator-card .ind-abbr {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-.ind-forest .ind-abbr { color: var(--forest); }
-.ind-amber  .ind-abbr { color: var(--amber); }
-.ind-sky    .ind-abbr { color: var(--sky); }
-.ind-bark   .ind-abbr { color: var(--bark); }
-.indicator-card .ind-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: 4px;
-}
-.indicator-card .ind-desc {
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.55;
-}
-
-/* ─── CHECKLIST ─── */
-.checklist { list-style: none; margin: 12px 0; }
-.checklist li {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 9px 0;
-  border-bottom: 1px solid var(--border-soft);
-  font-size: 14px;
-  color: var(--ink-soft);
-  line-height: 1.6;
-}
-.checklist li:last-child { border-bottom: none; }
-.check-box {
-  width: 20px; height: 20px;
-  border-radius: 50%;
-  background: var(--forest-pale);
-  border: 1.5px solid var(--forest);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  margin-top: 2px;
-  font-size: 11px;
-  color: var(--forest);
-}
-
-/* ─── SIDEBAR ─── */
-.sidebar { position: sticky; top: 70px; }
-
-.sidebar-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 18px;
-  margin-bottom: 18px;
-  box-shadow: 0 2px 6px var(--shadow);
-}
-.sidebar-card h4 {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--bark);
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border-soft);
-}
-
-.toc-list { list-style: none; }
-.toc-list li { margin-bottom: 4px; }
-.toc-list a {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--muted);
-  text-decoration: none;
-  padding: 5px 8px;
-  border-radius: 7px;
-  transition: background 0.15s, color 0.15s;
-}
-.toc-list a:hover { background: var(--cream); color: var(--forest); }
-.toc-dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.quick-links a {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 13px;
-  color: var(--sky);
-  text-decoration: none;
-  padding: 7px 0;
-  border-bottom: 1px solid var(--border-soft);
-  transition: color 0.15s;
-}
-.quick-links a:last-child { border-bottom: none; }
-.quick-links a:hover { color: var(--forest); }
-.quick-links a span { font-size: 16px; }
-
-.info-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
-  padding: 7px 0;
-  border-bottom: 1px solid var(--border-soft);
-}
-.info-row:last-child { border-bottom: none; }
-.info-row .label { color: var(--muted); }
-.info-row .value { font-weight: 600; color: var(--ink-soft); }
-
-/* ─── FOOTER ─── */
-.footer {
-  background: var(--forest);
-  color: rgba(228,237,230,0.75);
-  text-align: center;
-  padding: 28px 32px;
-  font-size: 13px;
-  line-height: 1.8;
-  margin-top: 20px;
-}
-.footer strong { color: #E4EDE6; }
-
-/* ─── RESPONSIVE ─── */
-@media (max-width: 800px) {
-  .layout { grid-template-columns: 1fr; padding: 20px 16px; }
-  .sidebar { position: static; }
-  .hero { padding: 36px 20px 32px; }
-  .hero h1 { font-size: 24px; }
-  .section { padding: 22px 18px; }
-  .indicator-grid { grid-template-columns: 1fr; }
-  .topbar { padding: 10px 16px; }
-  .sticky-nav { padding: 0 12px; }
+@media print{
+  body{ background:#fff; padding:0; }
+  .frame{ background:none; padding:0; box-shadow:none; }
+  .board{ background:#fff; box-shadow:none; padding:0; }
+  header h1, .annotatedWrap h2, .section h2{ color:#000; text-shadow:none; }
+  header p, .legend, footer{ color:#444; }
+  .worksheet, .actions{ display:none; }
+  .w-noun{ color:#9a6b00; } .w-adj{ color:#0e6b6f; } .w-verb{ color:#b3261e; }
+  #annotated{ color:#111; }
+  .card, .tableCard{ box-shadow:none; border:1px solid #ccc; }
 }
 </style>
 </head>
 <body>
+<div class="frame">
+  <div class="board">
+    <header>
+      <h1>محلل الجملة الإنجليزية</h1>
+      <p>السبورة النحوية — اكتب جملة أو قطعة إنجليزية، وسأحلّلها لك بالتفصيل</p>
+    </header>
 
-<!-- TOP BAR -->
-<div class="topbar">
-  <div class="topbar-brand">
-    <div class="topbar-logo">📚</div>
+    <div class="worksheet">
+      <label for="input">القطعة أو الجملة الإنجليزية</label>
+      <textarea id="input" placeholder="Example: She has been working at the hospital since 2019.">She has been working at the hospital since 2019. The new doctor is very kind and helpful.</textarea>
+      <div class="actions">
+        <button id="printBtn" type="button">🖨️ طباعة / تصدير</button>
+        <button id="analyzeBtn" type="button">🖉 حلّل الجملة</button>
+      </div>
+    </div>
 
-  </div>
-  <div class="topbar-meta">
-    <span>📋 الإصدار 2.0</span>
+    <section id="results" hidden>
+      <div class="legend">
+        <span class="n"><i></i> اسم (Noun)</span>
+        <span class="v"><i></i> فعل (Verb)</span>
+        <span class="a"><i></i> صفة (Adjective)</span>
+      </div>
+
+      <div class="annotatedWrap">
+        <h2>النص المُحلَّل</h2>
+        <div id="annotated"></div>
+      </div>
+
+      <div class="section">
+        <h2 style="font-family:'Reem Kufi',sans-serif;font-size:18px;color:var(--gold)">الفاعل والزمن — جملة بجملة</h2>
+        <div class="cardGrid" id="sentenceInfo"></div>
+      </div>
+
+      <div class="tableCard">
+        <h3><i style="background:var(--noun)"></i> الأسماء (Nouns)</h3>
+        <table id="nounsTable">
+          <thead><tr><th>الكلمة</th><th>مفرد / جمع</th><th>عدد التكرار</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="tableCard">
+        <h3><i style="background:var(--adj)"></i> الصفات (Adjectives)</h3>
+        <table id="adjTable">
+          <thead><tr><th>الكلمة</th><th>الدرجة</th><th>عدد التكرار</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="tableCard">
+        <h3><i style="background:var(--verb)"></i> الأفعال وتصريفها الثلاثي</h3>
+        <table id="verbsTable">
+          <thead><tr><th>الفعل في الجملة</th><th>V1 المصدر</th><th>V2 الماضي</th><th>V3 التصريف الثالث</th><th>الزمن المستخدم</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <footer>تحليل تلقائي بمكتبة JS — قد لا يكون دقيقًا 100% في الجمل المعقدة جدًا.</footer>
+    </section>
   </div>
 </div>
-
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-badge">دليل إرشادي للباحثين </div>
-  <h1>الدليل الإرشادي لاختيار المجلات العلمية</h1>
-  <p>حماية الباحثين من المجلات الوهمية والمختطفة، وتوجيههم نحو قنوات النشر الرصينة التي تعكس كفاءتهم وتبرز حضورهم في مجتمع البحث العلمي</p>
-  <div class="hero-pills">
-    <span class="hero-pill">🔒 حماية البحث</span>
-    <span class="hero-pill">📊 Scopus &amp; WoS</span>
-    <span class="hero-pill">🌐 SCImago</span>
-    <span class="hero-pill">📖 نشر رصين</span>
-    <span class="hero-pill">✅ معايير الجودة</span>
-  </div>
-</div>
-
-<!-- STICKY NAV -->
-<nav class="sticky-nav">
-  <a class="nav-item active" href="#why">لماذا هذا الدليل</a>
-  <a class="nav-item" href="#types">أنواع المجلات</a>
-  <a class="nav-item" href="#indicators">المؤشرات التحذيرية</a>
-  <a class="nav-item" href="#strategies">استراتيجيات البحث</a>
-  <a class="nav-item" href="#verify">أدوات التحقق</a>
-  <a class="nav-item" href="#metrics">المؤشرات العلمية</a>
-  <a class="nav-item" href="#checklist">قائمة التحقق</a>
-</nav>
-
-<!-- LAYOUT -->
-<div class="layout">
-<main class="main">
-
-  <!-- WHY -->
-  <section class="section" id="why">
-    <div class="section-header">
-      <div class="section-icon icon-forest">🎯</div>
-      <div>
-        <div class="section-title">لماذا هذا الدليل؟</div>
-        <div class="section-sub">الأهداف والمبررات</div>
-      </div>
-    </div>
-
-    <div class="alert alert-forest">
-      <span class="alert-icon">💡</span>
-      <div>يهدف هذا الدليل إلى <strong>حماية المدربين والباحثين</strong> من الاستغلال الأكاديمي والمادي الذي تمارسه المجلات الوهمية والمختطفة، وتوجيههم نحو النشر الرصين.</div>
-    </div>
-
-    <ul class="warn-list" style="list-style:none; margin:0;">
-      <li style="border-right-color: var(--forest); background: var(--forest-pale);">
-        <span class="wi">🛡️</span>
-        <div><strong style="color:var(--forest);">الحماية من الاستغلال</strong>حماية المدربين من الوقوع ضحية الاستغلال المادي أو الأكاديمي الذي تمارسه المجلات الوهمية والمختطفة.</div>
-      </li>
-      <li style="border-right-color: var(--amber); background: var(--amber-pale);">
-        <span class="wi">🧭</span>
-        <div><strong style="color:var(--amber);">توجيه الجهود البحثية</strong>توجيه البحث نحو قنوات نشر رصينة تسهم في بناء هوية بحثية متينة تعكس كفاءة المدرب وتبرز حضوره الفاعل.</div>
-      </li>
-      <li style="border-right-color: var(--sky); background: var(--sky-pale);">
-        <span class="wi">⏱️</span>
-        <div><strong style="color:var(--sky);">توفير الوقت والجهد</strong>تزويد الباحثين باستراتيجيات عملية وأدوات وخطوات للتحقق من موثوقية المجلات العلمية ورصانتها.</div>
-      </li>
-      <li style="border-right-color: var(--bark); background: var(--cream);">
-        <span class="wi">🏛️</span>
-        <div><strong style="color:var(--bark);">تعزيز مكانة المؤسسة</strong>رفع مستوى المخرجات البحثية عبر توجيه النشر نحو المجلات الرصينة بما يضمن تقديم أبحاث عالية الجودة.</div>
-      </li>
-    </ul>
-  </section>
-
-  <!-- TYPES -->
-  <section class="section" id="types">
-    <div class="section-header">
-      <div class="section-icon icon-red">⚠️</div>
-      <div>
-        <div class="section-title">التعرف على المجلات غير الرصينة</div>
-        <div class="section-sub">نوعان رئيسيان يجب الحذر منهما</div>
-      </div>
-    </div>
-
-    <table class="compare-table">
-      <thead>
-        <tr>
-          <th>وجه المقارنة</th>
-          <th>المجلات الوهمية<br><small style="font-weight:400;opacity:0.7">Predatory Journals</small></th>
-          <th>المجلات المختطفة<br><small style="font-weight:400;opacity:0.7">Hijacked Journals</small></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>المفهوم</td>
-          <td>كيانات ربحية تدّعي النشر الأكاديمي، هدفها الأساسي <strong>جمع الأموال</strong> دون مراعاة جودة البحث.</td>
-          <td>مواقع إلكترونية مزيفة تقوم بـ <strong>استنساخ شكل واسم وهوية</strong> مجلات علمية أصلية ومرموقة.</td>
-        </tr>
-        <tr>
-          <td>الخطورة</td>
-          <td>تفتقر لمعايير الجودة وتغيب عنها عملية <strong>التحكيم العلمي</strong> الحقيقي (Peer Review).</td>
-          <td>يتم <strong>اختطاف الجهد البحثي</strong> ونشره في موقع مزيف لا علاقة له بقواعد البيانات المعتمدة.</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- INDICATORS -->
-  <section class="section" id="indicators">
-    <div class="section-header">
-      <div class="section-icon icon-red">🚨</div>
-      <div>
-        <div class="section-title">المؤشرات الدالة على المجلات المشبوهة</div>
-        <div class="section-sub">علامات التحذير التي يجب الانتباه إليها</div>
-      </div>
-    </div>
-    <ul class="warn-list">
-      <li>
-        <span class="wi">⚡</span>
-        <div><strong>وعود النشر السريع</strong>القبول الفوري للبحث أو إنهاء التحكيم خلال أيام معدودة — مما يتنافى مع أبسط معايير الدقة والمراجعة العلمية.</div>
-      </li>
-      <li>
-        <span class="wi">📧</span>
-        <div><strong>التسويق العشوائي</strong>إرسال دعوات متكررة على البريد الإلكتروني تطالب الباحث بإرسال أبحاثه بشكل عاجل وبصيغ تفتقر للاحترافية.</div>
-      </li>
-      <li>
-        <span class="wi">🎲</span>
-        <div><strong>المجال العلمي العشوائي</strong>تدّعي المجلة نشر الأبحاث في كافة التخصصات دون وجود مسار علمي دقيق ومحدد.</div>
-      </li>
-      <li>
-        <span class="wi">🕵️</span>
-        <div><strong>هيئة تحرير غير واضحة</strong>استخدام عناوين بريد إلكتروني مجانية كـ Gmail بدلاً من الحسابات الجامعية والمؤسسية المعتمدة.</div>
-      </li>
-    </ul>
-  </section>
-
-  <!-- STRATEGIES -->
-  <section class="section" id="strategies">
-    <div class="section-header">
-      <div class="section-icon icon-amber">🔍</div>
-      <div>
-        <div class="section-title">استراتيجيات البحث عن المجلة الأنسب</div>
-        <div class="section-sub">أربع استراتيجيات عملية لاختيار المجلة المناسبة</div>
-      </div>
-    </div>
-
-    <div class="alert alert-sky">
-      <span class="alert-icon">ℹ️</span>
-      <div>الاستراتيجية <strong>الأولى والثانية</strong> مخصصة للمجلات الإنجليزية فقط، بينما <strong>الثالثة والرابعة</strong> فعّالة للبحث عن المجلات العربية والإنجليزية.</div>
-    </div>
-
-    <div class="strategy-cards">
-      <!-- S1 -->
-      <div class="strategy-card">
-        <div class="strategy-head">
-          <div class="strategy-num num-forest">١</div>
-          <div>
-            <div class="strategy-head-title">موقع SCImago Journal Rank</div>
-            <div class="strategy-head-sub">تصفية المجلات حسب التخصص والتقييم</div>
-          </div>
-        </div>
-        <div class="strategy-body">
-          <a href="https://www.scimagojr.com/" target="_blank" class="link-chip">🌐 www.scimagojr.com</a>
-          <div class="steps" style="margin-top:14px;">
-            <div class="step-row">
-              <div class="step-dot">١</div>
-              <div class="step-text">الدخول للموقع والضغط على <strong>Journal Ranking</strong> للوصول لخيارات التصفية المتقدمة.</div>
-            </div>
-            <div class="step-row">
-              <div class="step-dot">٢</div>
-              <div class="step-text">تحديد <strong>المجال العام</strong> ثم <strong>التخصص الدقيق</strong> لضمان ظهور المجلات الأكثر صلة ببحثك.</div>
-            </div>
-            <div class="step-row">
-              <div class="step-dot">٣</div>
-              <div class="step-text">تُرتَّب النتائج من <strong>Q1</strong> (المجلات النخبوية الأعلى جودة) وصولاً إلى <strong>Q4</strong> (الأقل تأثيراً ضمن المجلات المعتمدة).</div>
-            </div>
-          </div>
-          <div class="code-block">
-<span class="cm"># تصفية مثالية</span>
-<span class="kw">Subject Area</span>  → <span class="str">Physics and Astronomy</span>
-<span class="kw">Subject Category</span> → <span class="str">Condensed Matter Physics</span>
-<span class="kw">Region</span>       → <span class="num">All Regions</span>  <span class="cm">(موصى به)</span>
-<span class="kw">Type</span>         → <span class="num">Journals</span>
-
-<span class="cm"># الترتيب التلقائي:</span>
-<span class="fn">Q1</span> → <span class="fn">Q2</span> → <span class="fn">Q3</span> → <span class="fn">Q4</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- S2 -->
-      <div class="strategy-card">
-        <div class="strategy-head">
-          <div class="strategy-num num-amber">٢</div>
-          <div>
-            <div class="strategy-head-title">أدوات المطابقة الذكية لدور النشر الكبرى</div>
-            <div class="strategy-head-sub">أدخل ملخص بحثك واحصل على ترشيحات فورية</div>
-          </div>
-        </div>
-        <div class="strategy-body">
-          <div class="steps">
-            <div class="step-row">
-              <div class="step-dot" style="background:var(--amber);">١</div>
-              <div class="step-text">
-                <strong>Springer Nature — Journal Suggester</strong><br>
-                <a href="https://link.springer.com/journals" target="_blank" class="link-chip" style="margin-top:6px;">🌐 link.springer.com/journals</a>
-              </div>
-            </div>
-            <div class="step-row">
-              <div class="step-dot" style="background:var(--amber);">٢</div>
-              <div class="step-text">
-                <strong>Elsevier — Journal Finder</strong><br>
-                <a href="https://journalfinder.elsevier.com/" target="_blank" class="link-chip" style="margin-top:6px;">🌐 journalfinder.elsevier.com</a>
-              </div>
-            </div>
-            <div class="step-row">
-              <div class="step-dot" style="background:var(--amber);">٣</div>
-              <div class="step-text">انسخ <strong>ملخص البحث أو عنوانه أو كلماته الدالة</strong> في الحقل المخصص ثم اضغط "Find Journals".</div>
-            </div>
-            <div class="step-row">
-              <div class="step-dot" style="background:var(--amber);">٤</div>
-              <div class="step-text">تظهر المجلات المرشحة مصحوبة بـ <strong>رسوم النشر · زمن الرد · معامل التأثير</strong>.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- S3 -->
-      <div class="strategy-card">
-        <div class="strategy-head">
-          <div class="strategy-num num-sky">٣</div>
-          <div>
-            <div class="strategy-head-title">قائمة مراجع بحثك</div>
-            <div class="strategy-head-sub">فعّالة للمجلات العربية والإنجليزية</div>
-          </div>
-        </div>
-        <div class="strategy-body">
-          <p>ارجع إلى قائمة المراجع الخاصة ببحثك واستخرج المجلات التي نُشرت فيها الدراسات السابقة — فهي تمثل <strong>غالباً الوجهة الأنسب والمضمونة</strong> لبحثك لأنها تُثبت أن المجلة تنشر في نفس مجالك.</p>
-        </div>
-      </div>
-
-      <!-- S4 -->
-      <div class="strategy-card">
-        <div class="strategy-head">
-          <div class="strategy-num num-bark">٤</div>
-          <div>
-            <div class="strategy-head-title">تتبّع الباحثين النشطين في مجالك</div>
-            <div class="strategy-head-sub">فعّالة للمجلات العربية والإنجليزية</div>
-          </div>
-        </div>
-        <div class="strategy-body">
-          <p>ابحث عن أسماء الباحثين النشطين في تخصصك واستعرض حساباتهم على <strong>Google Scholar</strong> وغيرها من المنصات الأكاديمية لمعرفة المجلات الموثوقة التي ينشرون فيها.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- VERIFY -->
-  <section class="section" id="verify">
-    <div class="section-header">
-      <div class="section-icon icon-forest">✅</div>
-      <div>
-        <div class="section-title">أدوات التحقق من موثوقية المجلة</div>
-        <div class="section-sub">قواعد البيانات المعتمدة عالمياً</div>
-      </div>
-    </div>
-
-    <div class="alert alert-amber">
-      <span class="alert-icon">⭐</span>
-      <div>فهرسة المجلة في قاعدة <strong>Scopus</strong> أو <strong>Web of Science</strong> هو <strong>المعيار الأقوى والأكثر اعتماداً</strong> للتأكد من رصانة المجلة وضمان جودة أبحاثها.</div>
-    </div>
-
-    <div class="strategy-cards" style="margin-top:16px;">
-      <div class="strategy-card">
-        <div class="strategy-head">
-          <div class="strategy-num num-forest">١</div>
-          <div>
-            <div class="strategy-head-title">قاعدة سكوبس — Scopus</div>
-          </div>
-        </div>
-        <div class="strategy-body">
-          <a href="https://www.scopus.com/sources.uri" target="_blank" class="link-chip">🌐 scopus.com/sources</a>
-          <div class="steps" style="margin-top:14px;">
-            <div class="step-row">
-              <div class="step-dot">١</div>
-              <div class="step-text">افتح القائمة المنسدلة واختر <strong>Title</strong> للبحث باسم المجلة.</div>
-            </div>
-            <div class="step-row">
-              <div class="step-dot">٢</div>
-              <div class="step-text">اكتب اسم المجلة واضغط <strong>Find sources</strong>.</div>
-            </div>
-            <div class="step-row">
-              <div class="step-dot">٣</div>
-              <div class="step-text">اضغط على اسم المجلة لمعرفة <strong>سنوات التغطية، الناشر، CiteScore، SJR، SNIP</strong> وأحدث إحصائيات الاستشهاد.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="strategy-card">
-        <div class="strategy-head">
-          <div class="strategy-num num-sky">٢</div>
-          <div>
-            <div class="strategy-head-title">شبكة العلوم — Web of Science</div>
-          </div>
-        </div>
-        <div class="strategy-body">
-          <a href="https://mjl.clarivate.com/home" target="_blank" class="link-chip">🌐 mjl.clarivate.com</a>
-          <p style="margin-top:12px;">ابحث عن اسم المجلة أو رقمها التسلسلي (ISSN) — <strong>ظهور المجلة ضمن النتائج يؤكد رسمياً اعتمادها وفهرستها</strong> في الشبكة.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- METRICS -->
-  <section class="section" id="metrics">
-    <div class="section-header">
-      <div class="section-icon icon-sky">📊</div>
-      <div>
-        <div class="section-title">مصطلحات ومؤشرات علمية هامة</div>
-        <div class="section-sub">كيف تقرأ قوة المجلة العلمية</div>
-      </div>
-    </div>
-    <div class="indicator-grid">
-      <div class="indicator-card ind-sky">
-        <div class="ind-abbr">IF</div>
-        <div class="ind-name">معامل التأثير — Impact Factor</div>
-        <div class="ind-desc">تابع لـ Web of Science · يُحسب بقسمة عدد الاستشهادات التي تلقتها أبحاث المجلة خلال سنتين على إجمالي الأبحاث المنشورة في نفس السنتين.</div>
-      </div>
-      <div class="indicator-card ind-forest">
-        <div class="ind-abbr">CS</div>
-        <div class="ind-name">مؤشر الاستشهاد — CiteScore</div>
-        <div class="ind-desc">تابع لـ Scopus · يعطي نظرة أشمل لأداء المجلة، يُحسب على مدى 4 سنوات بدلاً من سنتين — أكثر استقراراً وشمولاً من IF.</div>
-      </div>
-      <div class="indicator-card ind-amber">
-        <div class="ind-abbr">SJR</div>
-        <div class="ind-name">مؤشر سيماجو — SCImago</div>
-        <div class="ind-desc">يقيس جودة الاستشهاد — الاستشهاد القادم من مجلة Q1 قوية يمنح تقييماً أعلى من الاستشهاد القادم من مجلة ضعيفة.</div>
-      </div>
-      <div class="indicator-card ind-bark">
-        <div class="ind-abbr">h</div>
-        <div class="ind-name">مؤشر إتش — H-index</div>
-        <div class="ind-desc">يقيس الإنتاجية والتأثير معاً — إذا كان h=20 فهذا يعني أن المجلة نشرت 20 بحثاً حصل كل منها على 20 استشهاداً على الأقل.</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CHECKLIST -->
-  <section class="section" id="checklist">
-    <div class="section-header">
-      <div class="section-icon icon-forest">📋</div>
-      <div>
-        <div class="section-title">قائمة التحقق السريع</div>
-        <div class="section-sub">تحقق من هذه النقاط قبل إرسال بحثك</div>
-      </div>
-    </div>
-    <ul class="checklist">
-      <li><div class="check-box">✓</div>المجلة مفهرسة في Scopus أو Web of Science</li>
-      <li><div class="check-box">✓</div>لها ISSN رسمي وموقع مؤسسي واضح ومحترف</li>
-      <li><div class="check-box">✓</div>هيئة تحريرية معلنة بأسماء أكاديميين حقيقيين يمكن التحقق منهم</li>
-      <li><div class="check-box">✓</div>تحكيم علمي واضح المعالم والإجراءات (Peer Review)</li>
-      <li><div class="check-box">✓</div>تخصص محدد — لا تدّعي نشر كافة التخصصات</li>
-      <li><div class="check-box">✓</div>رسوم نشر موضحة بشفافية قبل الإرسال (إن وُجدت)</li>
-      <li><div class="check-box">✓</div>لا وعود بقبول أو نشر سريع خلال أيام معدودة</li>
-      <li><div class="check-box">✓</div>لها تاريخ نشر ممتد وأعداد منشورة يمكن الاطلاع عليها</li>
-      <li><div class="check-box">✓</div>بريد التواصل على دومين مؤسسي لا على Gmail أو Yahoo</li>
-    </ul>
-  </section>
-
-</main>
-
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="sidebar-card">
-    <h4>المحتويات</h4>
-    <ul class="toc-list">
-      <li><a href="#why"><span class="toc-dot" style="background:var(--forest);"></span>لماذا هذا الدليل</a></li>
-      <li><a href="#types"><span class="toc-dot" style="background:var(--red);"></span>أنواع المجلات</a></li>
-      <li><a href="#indicators"><span class="toc-dot" style="background:var(--red);"></span>المؤشرات التحذيرية</a></li>
-      <li><a href="#strategies"><span class="toc-dot" style="background:var(--amber);"></span>استراتيجيات البحث</a></li>
-      <li><a href="#verify"><span class="toc-dot" style="background:var(--forest);"></span>أدوات التحقق</a></li>
-      <li><a href="#metrics"><span class="toc-dot" style="background:var(--sky);"></span>المؤشرات العلمية</a></li>
-      <li><a href="#checklist"><span class="toc-dot" style="background:var(--bark);"></span>قائمة التحقق</a></li>
-    </ul>
-  </div>
-
-  <div class="sidebar-card">
-    <h4>روابط مفيدة</h4>
-    <div class="quick-links">
-      <a href="https://www.scimagojr.com/" target="_blank">SCImago Journal Rank <span>↗</span></a>
-      <a href="https://www.scopus.com/sources.uri" target="_blank">Scopus Sources <span>↗</span></a>
-      <a href="https://mjl.clarivate.com/home" target="_blank">Web of Science <span>↗</span></a>
-      <a href="https://link.springer.com/journals" target="_blank">Springer Suggester <span>↗</span></a>
-      <a href="https://journalfinder.elsevier.com/" target="_blank">Elsevier Finder <span>↗</span></a>
-    </div>
-  </div>
-
-  <div class="sidebar-card">
-    <h4>معلومات الدليل</h4>
-    <div class="info-row"><span class="label">المعِدّ</span><span class="value">د. عبدالعزيز</span></div>
-    <div class="info-row"><span class="label">الإصدار</span><span class="value">2.0</span></div>
-    <div class="info-row"><span class="label">اللغة</span><span class="value">العربية</span></div>
-    <div class="info-row"><span class="label">الجهة</span><span class="value">TVTC</span></div>
-    <div class="info-row"><span class="label">الرخصة</span><span class="value">CC-BY 4.0</span></div>
-  </div>
-
-  <div class="sidebar-card" style="background: var(--forest-pale); border-color:#B8D4BD;">
-    <h4 style="color:var(--forest);">تذكير مهم</h4>
-    <p style="font-size:13px; color:var(--forest); line-height:1.7;">تحقق دائماً من فهرسة المجلة في Scopus أو WoS قبل إرسال بحثك — هذا هو المعيار الذهبي للتأكد من رصانتها.</p>
-  </div>
-</aside>
-
-</div>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <strong>الدليل الإرشادي لاختيار المجلات العلمية</strong><br>
-    د. عبدالعزيز بن عبدالله الدهمشي<br>
-    م. سلطان بن عايد العتيبي
-</footer>
 
 <script>
-const navItems = document.querySelectorAll('.nav-item');
-const sections = document.querySelectorAll('section[id]');
-window.addEventListener('scroll', () => {
-  let current = '';
-  sections.forEach(s => {
-    if (window.scrollY >= s.offsetTop - 100) current = s.id;
+/* ---------- irregular verbs: base -> [past, pastParticiple] ---------- */
+const IRREGULAR = {
+  be:["was/were","been"], have:["had","had"], do:["did","done"], go:["went","gone"],
+  get:["got","gotten"], make:["made","made"], know:["knew","known"], think:["thought","thought"],
+  take:["took","taken"], see:["saw","seen"], come:["came","come"], give:["gave","given"],
+  find:["found","found"], tell:["told","told"], feel:["felt","felt"], leave:["left","left"],
+  become:["became","become"], put:["put","put"], mean:["meant","meant"], keep:["kept","kept"],
+  let:["let","let"], begin:["began","begun"], show:["showed","shown"], hear:["heard","heard"],
+  run:["ran","run"], bring:["brought","brought"], write:["wrote","written"], sit:["sat","sat"],
+  stand:["stood","stood"], lose:["lost","lost"], pay:["paid","paid"], meet:["met","met"],
+  set:["set","set"], lead:["led","led"], understand:["understood","understood"], speak:["spoke","spoken"],
+  read:["read","read"], spend:["spent","spent"], grow:["grew","grown"], win:["won","won"],
+  buy:["bought","bought"], send:["sent","sent"], build:["built","built"], fall:["fell","fallen"],
+  cut:["cut","cut"], sell:["sold","sold"], break:["broke","broken"], draw:["drew","drawn"],
+  drive:["drove","driven"], hold:["held","held"], sing:["sang","sung"], eat:["ate","eaten"],
+  drink:["drank","drunk"], fly:["flew","flown"], forget:["forgot","forgotten"], hide:["hid","hidden"],
+  ride:["rode","ridden"], rise:["rose","risen"], shake:["shook","shaken"], shoot:["shot","shot"],
+  sleep:["slept","slept"], swim:["swam","swum"], teach:["taught","taught"], throw:["threw","thrown"],
+  wear:["wore","worn"], catch:["caught","caught"], choose:["chose","chosen"], cost:["cost","cost"],
+  deal:["dealt","dealt"], dig:["dug","dug"], fight:["fought","fought"], forgive:["forgave","forgiven"],
+  freeze:["froze","frozen"], hang:["hung","hung"], hurt:["hurt","hurt"], kneel:["knelt","knelt"],
+  lay:["laid","laid"], lend:["lent","lent"], lie:["lay","lain"], light:["lit","lit"],
+  mistake:["mistook","mistaken"], prove:["proved","proven"], quit:["quit","quit"], shut:["shut","shut"],
+  sink:["sank","sunk"], spread:["spread","spread"], steal:["stole","stolen"], strike:["struck","struck"],
+  swear:["swore","sworn"], sweep:["swept","swept"], swing:["swung","swung"], tear:["tore","torn"],
+  wake:["woke","woken"], weep:["wept","wept"], bend:["bent","bent"], bind:["bound","bound"],
+  bite:["bit","bitten"], bleed:["bled","bled"], blow:["blew","blown"], breed:["bred","bred"],
+  burn:["burnt","burnt"], burst:["burst","burst"], dive:["dove","dived"], feed:["fed","fed"],
+  flee:["fled","fled"], fling:["flung","flung"], grind:["ground","ground"]
+};
+const V2TO_V1 = {}, V3TO_V1 = {};
+for (const [v1, [v2, v3]] of Object.entries(IRREGULAR)) {
+  v2.split('/').forEach(f => V2TO_V1[f] = v1);
+  v3.split('/').forEach(f => V3TO_V1[f] = v1);
+}
+
+function regularPast(v1){
+  if (/[^aeiou]e$/.test(v1)) return v1 + 'd';
+  if (/[^aeiouy][y]$/.test(v1)) return v1.slice(0,-1) + 'ied';
+  if (v1.length <= 5 && /^[a-z]*[aeiou][^aeiouwxy]$/.test(v1)) return v1 + v1.slice(-1) + 'ed';
+  return v1 + 'ed';
+}
+function getV1(word){
+  word = word.toLowerCase();
+  if (IRREGULAR[word]) return word;
+  if (V2TO_V1[word]) return V2TO_V1[word];
+  if (V3TO_V1[word]) return V3TO_V1[word];
+  try {
+    const inf = nlp(word).verbs().toInfinitive().text();
+    if (inf) return inf.toLowerCase();
+  } catch (e) {}
+  if (word.endsWith('ing')) return word.slice(0, -3).replace(/(.)\1$/, '$1');
+  if (word.endsWith('ies')) return word.slice(0, -3) + 'y';
+  if (word.endsWith('es')) return word.slice(0, -2);
+  if (word.endsWith('s') && !word.endsWith('ss')) return word.slice(0, -1);
+  if (word.endsWith('ed')) return word.slice(0, -2);
+  return word;
+}
+function getForms(v1){
+  if (IRREGULAR[v1]) return [v1, IRREGULAR[v1][0], IRREGULAR[v1][1]];
+  const p = regularPast(v1);
+  return [v1, p, p];
+}
+
+/* ---------- tense detection ---------- */
+function detectTense(sentenceLower){
+  const rules = [
+    [/\bwill\s+have\s+been\s+\w+ing\b/, 'Future Perfect Continuous', 'المستقبل التام المستمر'],
+    [/\bhad\s+been\s+\w+ing\b/, 'Past Perfect Continuous', 'الماضي التام المستمر'],
+    [/\b(has|have)\s+been\s+\w+ing\b/, 'Present Perfect Continuous', 'الحاضر التام المستمر'],
+    [/\bwill\s+have\s+\w+\b/, 'Future Perfect', 'المستقبل التام'],
+    [/\bwill\s+be\s+\w+ing\b/, 'Future Continuous', 'المستقبل المستمر'],
+    [/\b(was|were)\s+\w+ing\b/, 'Past Continuous', 'الماضي المستمر'],
+    [/\b(am|is|are)\s+\w+ing\b/, 'Present Continuous', 'الحاضر المستمر'],
+    [/\bhad\s+\w+(ed|en|n)\b/, 'Past Perfect', 'الماضي التام'],
+    [/\b(has|have)\s+\w+(ed|en|n)\b/, 'Present Perfect', 'الحاضر التام'],
+    [/\b(am|is|are)\s+going\s+to\s+\w+\b/, 'Future (going to)', 'المستقبل (going to)'],
+    [/\b(will|shall)\s+\w+\b/, 'Future Simple', 'المستقبل البسيط'],
+    [/\b(was|were)\b/, 'Past Simple', 'الماضي البسيط'],
+    [/\b(am|is|are)\b/, 'Present Simple', 'الحاضر البسيط']
+  ];
+  for (const [re, en, ar] of rules) if (re.test(sentenceLower)) return { en, ar };
+  return null;
+}
+
+function getSubject(terms){
+  let idx = terms.findIndex(t => (t.tags || []).some(tag => ['Verb','Auxiliary','Copula'].includes(tag)));
+  if (idx <= 0) idx = terms.length;
+  const subj = terms.slice(0, idx).map(t => t.text).join(' ').trim();
+  return subj || '—';
+}
+
+/* ---------- main analysis ---------- */
+function analyze(){
+  const text = document.getElementById('input').value.trim();
+  if (!text) return;
+  const doc = nlp(text);
+  const sentences = doc.sentences().json();
+
+  const nounsMap = {}, adjMap = {}, verbsMap = {};
+  const sentenceCards = [];
+  let annotatedHTML = '';
+
+  sentences.forEach((s, si) => {
+    const lower = s.text.toLowerCase();
+    let tense = detectTense(lower);
+    if (!tense) {
+      const hasPast = (s.terms || []).some(t => (t.tags || []).includes('PastTense'));
+      tense = hasPast ? { en: 'Past Simple', ar: 'الماضي البسيط' } : { en: 'Present Simple', ar: 'الحاضر البسيط' };
+    }
+    const subject = getSubject(s.terms || []);
+    sentenceCards.push({ num: si + 1, text: s.text, subject, tense });
+
+    let pieces = [];
+    (s.terms || []).forEach(term => {
+      const tags = term.tags || [];
+      let cls = '';
+      if (tags.includes('Noun') && !tags.includes('Pronoun')) cls = 'w-noun';
+      else if (tags.includes('Adjective')) cls = 'w-adj';
+      else if (tags.includes('Verb') || tags.includes('Auxiliary') || tags.includes('Copula')) cls = 'w-verb';
+
+      const post = term.post || ' ';
+      pieces.push(cls ? `<span class="${cls}">${term.text}</span>${post}` : `${term.text}${post}`);
+
+      const wl = term.text.toLowerCase();
+      if (cls === 'w-noun') {
+        const type = tags.includes('Plural') ? 'جمع' : 'مفرد';
+        if (!nounsMap[wl]) nounsMap[wl] = { word: term.text, type, count: 0 };
+        nounsMap[wl].count++;
+      }
+      if (cls === 'w-adj') {
+        let degree = 'عادي';
+        if (tags.includes('Comparative')) degree = 'مقارنة (comparative)';
+        if (tags.includes('Superlative')) degree = 'تفوق (superlative)';
+        if (!adjMap[wl]) adjMap[wl] = { word: term.text, degree, count: 0 };
+        adjMap[wl].count++;
+      }
+      if (cls === 'w-verb' && !tags.includes('Auxiliary')) {
+        const v1 = getV1(wl);
+        const forms = getForms(v1);
+        if (!verbsMap[wl + si]) verbsMap[wl + si] = { used: term.text, v1: forms[0], v2: forms[1], v3: forms[2], tense: tense.ar };
+      }
+    });
+    annotatedHTML += `<p class="sentLine"><span class="sentNum">${si + 1}.</span>${pieces.join('')}</p>`;
   });
-  navItems.forEach(n => {
-    n.classList.toggle('active', n.getAttribute('href') === '#' + current);
-  });
+
+  renderResults({ annotatedHTML, sentenceCards, nounsMap, adjMap, verbsMap });
+}
+
+function renderResults({ annotatedHTML, sentenceCards, nounsMap, adjMap, verbsMap }){
+  document.getElementById('annotated').innerHTML = annotatedHTML;
+
+  document.getElementById('sentenceInfo').innerHTML = sentenceCards.map(c => `
+    <div class="card">
+      <span class="cardNum">${c.num}</span>
+      <div>
+        <p class="cardSentence">${c.text}</p>
+        <p class="cardMeta"><b>الفاعل:</b> ${c.subject} &nbsp;•&nbsp; <b>الزمن:</b> ${c.tense.ar} <span class="enTag">(${c.tense.en})</span></p>
+      </div>
+    </div>`).join('');
+
+  const nounRows = Object.values(nounsMap).map(n => `<tr><td>${n.word}</td><td>${n.type}</td><td>${n.count}</td></tr>`).join('')
+    || '<tr><td colspan="3">لا توجد أسماء</td></tr>';
+  document.querySelector('#nounsTable tbody').innerHTML = nounRows;
+
+  const adjRows = Object.values(adjMap).map(a => `<tr><td>${a.word}</td><td>${a.degree}</td><td>${a.count}</td></tr>`).join('')
+    || '<tr><td colspan="3">لا توجد صفات</td></tr>';
+  document.querySelector('#adjTable tbody').innerHTML = adjRows;
+
+  const verbRows = Object.values(verbsMap).map(v => `<tr><td>${v.used}</td><td>${v.v1}</td><td>${v.v2}</td><td>${v.v3}</td><td>${v.tense}</td></tr>`).join('')
+    || '<tr><td colspan="5">لا توجد أفعال</td></tr>';
+  document.querySelector('#verbsTable tbody').innerHTML = verbRows;
+
+  document.getElementById('results').hidden = false;
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+}
+
+document.getElementById('analyzeBtn').addEventListener('click', analyze);
+document.getElementById('printBtn').addEventListener('click', () => window.print());
+document.getElementById('input').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) analyze();
 });
 </script>
 </body>
