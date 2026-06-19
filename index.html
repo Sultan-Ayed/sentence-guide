@@ -5,19 +5,26 @@
 <title>محلل الجملة الإنجليزية</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Markazi+Text:wght@600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#F6F4EF;
+  --bg:#EDF0F5;
   --card:#FFFFFF;
-  --line:#E8E3D8;
-  --ink:#262F3D;
-  --ink-soft:#5B6577;
-  --noun:#9B5E12;
-  --verb:#B5342A;
-  --adj:#1B7768;
-  --accent:#2C3E50;
-  --accent-soft:#EAF0F6;
+  --line:#E1E5ED;
+  --ink:#1B2440;
+  --ink-soft:#5B6478;
+  --gold:#B08D57;
+  --navy:#1B2440;
+  --navy2:#2F4470;
+
+  --noun:#A8650A;     --noun-tint:#FBEFDB;
+  --verb:#A23B3B;     --verb-tint:#FBE7E4;
+  --adj:#1F7A68;      --adj-tint:#DFF1EC;
+  --pron:#2C5FAA;     --pron-tint:#E3ECF8;
+  --adv:#6A3FA0;      --adv-tint:#EEE6F7;
+  --prep:#4A6670;     --prep-tint:#E6EEEF;
+  --det:#B23A6B;      --det-tint:#FBE6EF;
+  --conj:#7A6A1E;     --conj-tint:#F4F1DA;
 }
 *{box-sizing:border-box;}
 body{
@@ -25,27 +32,39 @@ body{
   background:var(--bg);
   font-family:'IBM Plex Sans Arabic', sans-serif;
   color:var(--ink);
-  padding:32px 16px 70px;
+  padding:0 0 70px;
   line-height:1.9;
 }
-.wrap{ max-width:880px; margin:0 auto; }
-header{ text-align:center; margin-bottom:30px; }
-header h1{
-  font-family:'Markazi Text', serif;
-  font-weight:700;
-  font-size:clamp(28px,4vw,40px);
-  margin:0 0 8px;
-  color:var(--accent);
+.hero{
+  background:linear-gradient(135deg, var(--navy), var(--navy2));
+  padding:42px 16px 50px;
+  border-radius:0 0 28px 28px;
+  text-align:center;
+  margin-bottom:-26px;
 }
-header p{ margin:0; color:var(--ink-soft); font-size:15px; }
+.hero h1{
+  font-family:'Aref Ruqaa', serif;
+  font-weight:700;
+  font-size:clamp(32px,5vw,46px);
+  margin:0 0 10px;
+  color:#fff;
+}
+.hero .rule{ display:flex; align-items:center; justify-content:center; gap:10px; margin:0 0 12px; }
+.hero .rule span{ height:1px; width:48px; background:rgba(255,255,255,.35); }
+.hero .rule i{ width:6px; height:6px; background:var(--gold); transform:rotate(45deg); display:inline-block; }
+.hero p{ margin:0; color:rgba(255,255,255,.75); font-size:15px; }
+
+.wrap{ max-width:880px; margin:0 auto; padding:0 16px; position:relative; z-index:2; }
 
 .card{
   background:var(--card);
+  background-image: radial-gradient(circle, #00000008 1px, transparent 1px);
+  background-size: 16px 16px;
   border:1px solid var(--line);
   border-radius:14px;
   padding:24px;
-  margin-bottom:24px;
-  box-shadow:0 6px 18px -10px rgba(40,40,30,.12);
+  margin-bottom:22px;
+  box-shadow:0 14px 30px -18px rgba(20,25,45,.25);
 }
 
 label{ display:block; font-weight:600; margin-bottom:10px; font-size:15px; color:var(--ink); }
@@ -55,7 +74,7 @@ textarea{
   border:1px solid var(--line);
   border-radius:10px;
   padding:14px 16px;
-  background:#FCFBF8;
+  background:#FBFCFE;
   resize:vertical;
   font-family:'JetBrains Mono', monospace;
   font-size:15px;
@@ -65,8 +84,8 @@ textarea{
   direction:ltr;
   text-align:left;
 }
-textarea:focus{ border-color:var(--accent); }
-textarea::placeholder{ color:#A8A092; }
+textarea:focus{ border-color:var(--navy2); }
+textarea::placeholder{ color:#A8AEBC; }
 
 .actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:14px; flex-wrap:wrap; align-items:center; }
 #engineStatus{ font-size:13px; color:var(--ink-soft); margin-inline-end:auto; }
@@ -74,65 +93,102 @@ button{
   font-family:'IBM Plex Sans Arabic', sans-serif;
   font-weight:600;
   font-size:14.5px;
-  border-radius:8px;
-  padding:11px 20px;
+  border-radius:999px;
+  padding:11px 22px;
   cursor:pointer;
-  border:1.5px solid var(--accent);
+  border:1.5px solid var(--navy);
   transition:.15s;
 }
-#analyzeBtn{ background:var(--accent); color:#fff; }
-#analyzeBtn:hover:not(:disabled){ background:#1f2c38; }
-#analyzeBtn:disabled{ background:#B9C2CC; border-color:#B9C2CC; cursor:not-allowed; }
-#printBtn{ background:#fff; color:var(--accent); }
-#printBtn:hover{ background:var(--accent-soft); }
+#analyzeBtn{ background:var(--navy); color:#fff; }
+#analyzeBtn:hover:not(:disabled){ background:#11182c; }
+#analyzeBtn:disabled{ background:#C2C8D4; border-color:#C2C8D4; cursor:not-allowed; }
+#printBtn{ background:#fff; color:var(--navy); border-color:var(--gold); }
+#printBtn:hover{ background:#FBF6EE; }
 
 #results[hidden]{ display:none; }
 #errorBox{ display:none; background:#FBE9E7; border:1px solid #E3998C; color:#7A2A1F; padding:14px 16px; border-radius:10px; margin-bottom:22px; font-size:14px; }
 
-.legend{ display:flex; gap:20px; justify-content:center; flex-wrap:wrap; margin-bottom:6px; font-size:13.5px; color:var(--ink-soft); }
+.legend{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; padding:4px 0; font-size:13px; color:var(--ink-soft); }
 .legend span{ display:inline-flex; align-items:center; gap:6px; }
-.legend i{ width:13px; height:13px; border-radius:50%; display:inline-block; }
+.legend i{ width:12px; height:12px; border-radius:4px; display:inline-block; }
 .legend .n i{ background:var(--noun);} .legend .v i{ background:var(--verb);} .legend .a i{ background:var(--adj);}
+.legend .pr i{ background:var(--pron);} .legend .ad i{ background:var(--adv);} .legend .pp i{ background:var(--prep);}
+.legend .dt i{ background:var(--det);} .legend .cj i{ background:var(--conj);}
 
-h2{ font-family:'Markazi Text', serif; font-size:21px; margin:0 0 16px; color:var(--accent); font-weight:700; }
+h2{ font-size:18px; margin:0 0 16px; color:var(--navy); font-weight:700; display:flex; align-items:center; gap:8px;}
+h2 .num{ font-family:'JetBrains Mono',monospace; color:var(--gold); font-size:14px; }
 
-#annotated{
-  direction:ltr; text-align:left;
-  font-family:'JetBrains Mono', monospace;
-  font-size:15.5px; line-height:2.1; color:var(--ink);
-  background:#FCFBF8; border:1px solid var(--line); border-radius:10px; padding:16px 18px;
-}
-.sentLine{ margin:0 0 10px; }
-.sentNum{ display:inline-block; min-width:20px; margin-inline-end:6px; color:var(--ink-soft); font-size:12px; }
-.w-noun{ color:var(--noun); font-weight:600; text-decoration:underline wavy; text-decoration-thickness:1px;}
-.w-adj{ color:var(--adj); font-weight:600; text-decoration:underline; }
-.w-verb{ color:var(--verb); font-weight:600; text-decoration:underline dashed; }
+/* ---- interlinear annotated passage ---- */
+#annotated{ direction:ltr; }
+.sentBlock{ display:flex; align-items:flex-start; gap:10px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px dashed var(--line); }
+.sentBlock:last-child{ border-bottom:none; margin-bottom:0; padding-bottom:0; }
+.vNum{ flex:0 0 22px; height:22px; border-radius:50%; background:var(--navy); color:#fff; font-family:'JetBrains Mono',monospace; font-size:11px; display:flex; align-items:center; justify-content:center; margin-top:2px; }
+.tokens{ display:flex; flex-wrap:wrap; align-items:flex-start; gap:2px 0; }
+.token{ display:flex; flex-direction:column; align-items:center; margin:0 5px 8px 0; }
+.word{ font-family:'JetBrains Mono', monospace; font-size:15.5px; color:var(--ink); white-space:pre; }
+.tag{ font-size:10px; font-weight:600; padding:1px 7px; border-radius:7px; margin-top:4px; line-height:1.5; }
+.tag-noun{ background:var(--noun-tint); color:var(--noun); }
+.tag-verb{ background:var(--verb-tint); color:var(--verb); }
+.tag-adj{ background:var(--adj-tint); color:var(--adj); }
+.tag-pron{ background:var(--pron-tint); color:var(--pron); }
+.tag-adv{ background:var(--adv-tint); color:var(--adv); }
+.tag-prep{ background:var(--prep-tint); color:var(--prep); }
+.tag-det{ background:var(--det-tint); color:var(--det); }
+.tag-conj{ background:var(--conj-tint); color:var(--conj); }
 
-.cardGrid{ display:flex; flex-direction:column; gap:10px; }
-.sentenceCard{ display:flex; gap:12px; background:#FCFBF8; border:1px solid var(--line); border-radius:10px; padding:12px 14px; }
-.cardNum{ font-family:'JetBrains Mono', monospace; font-weight:700; background:var(--accent); color:#fff; border-radius:50%; width:26px; height:26px; flex:0 0 26px; display:flex; align-items:center; justify-content:center; font-size:13px;}
-.cardSentence{ direction:ltr; text-align:left; font-family:'JetBrains Mono', monospace; font-size:14px; margin:0 0 6px; }
-.cardMeta{ margin:0; font-size:13.5px; color:var(--ink-soft); }
-.cardMeta b{ color:var(--ink); }
-.enTag{ color:#8a8478; }
+/* ---- sentence fact rows ---- */
+.factRow{ display:flex; gap:14px; align-items:flex-start; background:#FBFCFE; border:1px solid var(--line); border-inline-start:4px solid var(--gold); border-radius:8px; padding:12px 14px; margin-bottom:10px; }
+.factRow .vNum{ background:var(--gold); }
+.factSentence{ direction:ltr; text-align:left; font-family:'JetBrains Mono', monospace; font-size:14px; margin:0 0 6px; color:var(--ink); }
+.factMeta{ margin:0; font-size:13.5px; color:var(--ink-soft); }
+.factMeta b{ color:var(--ink); }
+.enTag{ color:#9a9382; }
 
+/* ---- tables ---- */
+.tableCard{ border-inline-start-width:4px; }
+.tableCard.noun{ border-inline-start-color:var(--noun); }
+.tableCard.verb{ border-inline-start-color:var(--verb); }
+.tableCard.adj{ border-inline-start-color:var(--adj); }
+.tableCard.pron{ border-inline-start-color:var(--pron); }
+.tableCard.adv{ border-inline-start-color:var(--adv); }
+.tableCard.prep{ border-inline-start-color:var(--prep); }
+.tableCard.det{ border-inline-start-color:var(--det); }
+.tableCard.conj{ border-inline-start-color:var(--conj); }
 table{ width:100%; border-collapse:collapse; font-size:14px; }
 thead th{ text-align:start; border-bottom:2px solid var(--ink); padding:8px 10px; font-weight:700; color:var(--ink);}
-tbody td{ padding:9px 10px; border-bottom:1px solid var(--line); }
+tbody tr:nth-child(even){ background:#F7F8FB; }
+tbody td{ padding:9px 10px; }
 tbody td:first-child, thead th:first-child{ direction:ltr; text-align:left; font-family:'JetBrains Mono', monospace; }
-.tableTitle{ display:flex; align-items:center; gap:8px; }
-.tableTitle i{ width:11px; height:11px; border-radius:50%; display:inline-block; }
 
 footer{ text-align:center; color:var(--ink-soft); font-size:12.5px; margin-top:8px; }
+
+.translation{ direction:rtl; text-align:right; font-size:14.5px; color:var(--navy2); background:#F3F5FA; border-inline-start:3px solid var(--gold); border-radius:6px; padding:8px 12px; margin-top:6px; }
+.translation .lbl{ color:var(--gold); font-weight:600; font-size:12px; margin-inline-end:6px; }
+
+.siteFooter{ text-align:center; padding:30px 16px 10px; color:rgba(255,255,255,.0); }
+.creditBar{ max-width:880px; margin:34px auto 0; padding:18px 16px; text-align:center; border-top:1px solid var(--line); }
+.creditBar p{ margin:0; font-size:13.5px; color:var(--ink-soft); }
+.creditBar a{ color:var(--navy2); font-weight:600; text-decoration:none; border-bottom:1px solid var(--gold); }
+.creditBar a:hover{ color:var(--navy); }
+
+@media print{
+  body{ background:#fff; }
+  .hero{ background:#fff !important; border-radius:0; }
+  .hero h1, .hero p{ color:#000 !important; }
+  .hero .rule span{ background:#bbb; }
+  textarea, .actions, #printBtn{ display:none !important; }
+  .card{ box-shadow:none; }
+}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <h1>محلل الجملة الإنجليزية</h1>
-    <p>اكتب جملة أو قطعة إنجليزية، وسأحلّلها لك بالتفصيل</p>
-  </header>
+<div class="hero">
+  <h1>محلل الجملة الإنجليزية</h1>
+  <div class="rule"><span></span><i></i><span></span></div>
+  <p>اكتب جملة أو قطعة إنجليزية، وسأحلّلها لك بالتفصيل</p>
+</div>
 
+<div class="wrap">
   <div class="card">
     <label for="input">القطعة أو الجملة الإنجليزية</label>
     <textarea id="input" placeholder="Example: She has been working at the hospital since 2019.">She has been working at the hospital since 2019. The new doctor is very kind and helpful.</textarea>
@@ -146,50 +202,99 @@ footer{ text-align:center; color:var(--ink-soft); font-size:12.5px; margin-top:8
   <div id="errorBox"></div>
 
   <section id="results" hidden>
-    <div class="card">
+    <div class="card" style="padding:14px 24px;">
       <div class="legend">
-        <span class="n"><i></i> اسم (Noun)</span>
-        <span class="v"><i></i> فعل (Verb)</span>
-        <span class="a"><i></i> صفة (Adjective)</span>
+        <span class="n"><i></i> اسم</span>
+        <span class="v"><i></i> فعل</span>
+        <span class="a"><i></i> صفة</span>
+        <span class="pr"><i></i> ضمير</span>
+        <span class="ad"><i></i> ظرف</span>
+        <span class="pp"><i></i> حرف جر</span>
+        <span class="dt"><i></i> أداة تعريف/تنكير</span>
+        <span class="cj"><i></i> حرف عطف</span>
       </div>
     </div>
 
     <div class="card">
-      <h2>النص المُحلَّل</h2>
+      <h2>النص المُحلَّل — مع وسم كل كلمة</h2>
       <div id="annotated"></div>
     </div>
 
     <div class="card">
       <h2>الفاعل والزمن — جملة بجملة</h2>
-      <div class="cardGrid" id="sentenceInfo"></div>
+      <div id="sentenceInfo"></div>
     </div>
 
-    <div class="card">
-      <h2 class="tableTitle"><i style="background:var(--noun)"></i> الأسماء (Nouns)</h2>
+    <div class="card tableCard noun">
+      <h2><span class="num">①</span> الأسماء (Nouns)</h2>
       <table id="nounsTable">
         <thead><tr><th>الكلمة</th><th>مفرد / جمع</th><th>عدد التكرار</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
 
-    <div class="card">
-      <h2 class="tableTitle"><i style="background:var(--adj)"></i> الصفات (Adjectives)</h2>
+    <div class="card tableCard pron">
+      <h2><span class="num">②</span> الضمائر (Pronouns)</h2>
+      <table id="pronTable">
+        <thead><tr><th>الكلمة</th><th>عدد التكرار</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="card tableCard adj">
+      <h2><span class="num">③</span> الصفات (Adjectives)</h2>
       <table id="adjTable">
         <thead><tr><th>الكلمة</th><th>الدرجة</th><th>عدد التكرار</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
 
-    <div class="card">
-      <h2 class="tableTitle"><i style="background:var(--verb)"></i> الأفعال وتصريفها الثلاثي</h2>
+    <div class="card tableCard adv">
+      <h2><span class="num">④</span> الظروف / الأحوال (Adverbs)</h2>
+      <table id="advTable">
+        <thead><tr><th>الكلمة</th><th>عدد التكرار</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="card tableCard verb">
+      <h2><span class="num">⑤</span> الأفعال وتصريفها الثلاثي</h2>
       <table id="verbsTable">
         <thead><tr><th>الفعل في الجملة</th><th>V1 المصدر</th><th>V2 الماضي</th><th>V3 التصريف الثالث</th><th>الزمن المستخدم</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
 
+    <div class="card tableCard prep">
+      <h2><span class="num">⑥</span> حروف الجر (Prepositions)</h2>
+      <table id="prepTable">
+        <thead><tr><th>الكلمة</th><th>عدد التكرار</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="card tableCard det">
+      <h2><span class="num">⑦</span> أدوات التعريف والتنكير (Articles / Determiners)</h2>
+      <table id="detTable">
+        <thead><tr><th>الكلمة</th><th>عدد التكرار</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="card tableCard conj">
+      <h2><span class="num">⑧</span> حروف العطف (Conjunctions)</h2>
+      <table id="conjTable">
+        <thead><tr><th>الكلمة</th><th>عدد التكرار</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
     <footer>تحليل تلقائي بمكتبة JS — قد لا يكون دقيقًا 100% في الجمل المعقدة جدًا.</footer>
   </section>
+
+  <div class="creditBar">
+    <p>تصميم وتطوير: <a href="https://www.linkedin.com/in/sultanayed/?locale=ar" target="_blank" rel="noopener">SULTAN AYED</a></p>
+  </div>
 </div>
 
 <script>
@@ -296,6 +401,10 @@ function getSubject(terms){
   return subj || '—';
 }
 
+function escapeHTML(str){
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
 /* ---------- main analysis ---------- */
 function analyze(){
   const errorBox = document.getElementById('errorBox');
@@ -313,8 +422,8 @@ function analyze(){
     const doc = nlp(text);
     const sentences = doc.sentences().json();
 
-    const nounsMap = {}, adjMap = {}, verbsMap = {};
-    const sentenceCards = [];
+    const nounsMap = {}, adjMap = {}, verbsMap = {}, pronMap = {}, advMap = {}, prepMap = {}, detMap = {}, conjMap = {};
+    const sentenceFacts = [];
     let annotatedHTML = '';
 
     sentences.forEach((s, si) => {
@@ -325,74 +434,127 @@ function analyze(){
         tense = hasPast ? { en: 'Past Simple', ar: 'الماضي البسيط' } : { en: 'Present Simple', ar: 'الحاضر البسيط' };
       }
       const subject = getSubject(s.terms || []);
-      sentenceCards.push({ num: si + 1, text: s.text, subject, tense });
+      sentenceFacts.push({ num: si + 1, text: s.text, subject, tense });
 
-      let pieces = [];
+      let tokenHTML = '';
       (s.terms || []).forEach(term => {
         const tags = term.tags || [];
-        let cls = '';
-        if (tags.includes('Noun') && !tags.includes('Pronoun')) cls = 'w-noun';
-        else if (tags.includes('Adjective')) cls = 'w-adj';
-        else if (tags.includes('Verb') || tags.includes('Auxiliary') || tags.includes('Copula')) cls = 'w-verb';
+        let tagCls = '', tagLabel = '';
+        if (tags.includes('Pronoun')) { tagCls = 'tag-pron'; tagLabel = 'ضمير'; }
+        else if (tags.includes('Noun')) { tagCls = 'tag-noun'; tagLabel = 'اسم'; }
+        else if (tags.includes('Adjective')) { tagCls = 'tag-adj'; tagLabel = 'صفة'; }
+        else if (tags.includes('Verb') || tags.includes('Auxiliary') || tags.includes('Copula')) { tagCls = 'tag-verb'; tagLabel = 'فعل'; }
+        else if (tags.includes('Adverb')) { tagCls = 'tag-adv'; tagLabel = 'ظرف'; }
+        else if (tags.includes('Preposition')) { tagCls = 'tag-prep'; tagLabel = 'حرف جر'; }
+        else if (tags.includes('Determiner')) { tagCls = 'tag-det'; tagLabel = 'أداة'; }
+        else if (tags.includes('Conjunction')) { tagCls = 'tag-conj'; tagLabel = 'عطف'; }
 
         const post = term.post || ' ';
-        pieces.push(cls ? `<span class="${cls}">${term.text}</span>${post}` : `${term.text}${post}`);
+        const wordHTML = escapeHTML(term.text) + escapeHTML(post);
+        const tagHTML = tagCls ? `<span class="tag ${tagCls}">${tagLabel}</span>` : '';
+        tokenHTML += `<span class="token"><span class="word">${wordHTML}</span>${tagHTML}</span>`;
 
         const wl = term.text.toLowerCase();
-        if (cls === 'w-noun') {
+        if (tagCls === 'tag-noun') {
           const type = tags.includes('Plural') ? 'جمع' : 'مفرد';
           if (!nounsMap[wl]) nounsMap[wl] = { word: term.text, type, count: 0 };
           nounsMap[wl].count++;
         }
-        if (cls === 'w-adj') {
+        if (tagCls === 'tag-adj') {
           let degree = 'عادي';
           if (tags.includes('Comparative')) degree = 'مقارنة (comparative)';
           if (tags.includes('Superlative')) degree = 'تفوق (superlative)';
           if (!adjMap[wl]) adjMap[wl] = { word: term.text, degree, count: 0 };
           adjMap[wl].count++;
         }
-        if (cls === 'w-verb' && !tags.includes('Auxiliary')) {
+        if (tagCls === 'tag-verb' && !tags.includes('Auxiliary')) {
           const v1 = getV1(wl);
           const forms = getForms(v1);
           if (!verbsMap[wl + si]) verbsMap[wl + si] = { used: term.text, v1: forms[0], v2: forms[1], v3: forms[2], tense: tense.ar };
         }
+        if (tagCls === 'tag-pron') {
+          if (!pronMap[wl]) pronMap[wl] = { word: term.text, count: 0 };
+          pronMap[wl].count++;
+        }
+        if (tagCls === 'tag-adv') {
+          if (!advMap[wl]) advMap[wl] = { word: term.text, count: 0 };
+          advMap[wl].count++;
+        }
+        if (tagCls === 'tag-prep') {
+          if (!prepMap[wl]) prepMap[wl] = { word: term.text, count: 0 };
+          prepMap[wl].count++;
+        }
+        if (tagCls === 'tag-det') {
+          if (!detMap[wl]) detMap[wl] = { word: term.text, count: 0 };
+          detMap[wl].count++;
+        }
+        if (tagCls === 'tag-conj') {
+          if (!conjMap[wl]) conjMap[wl] = { word: term.text, count: 0 };
+          conjMap[wl].count++;
+        }
       });
-      annotatedHTML += `<p class="sentLine"><span class="sentNum">${si + 1}.</span>${pieces.join('')}</p>`;
+      annotatedHTML += `<div class="sentBlock"><span class="vNum">${si + 1}</span><div style="flex:1;min-width:0;"><div class="tokens">${tokenHTML}</div><div class="translation" id="trans-${si}"><span class="lbl">الترجمة:</span><span class="txt">...جاري الترجمة</span></div></div></div>`;
     });
 
-    renderResults({ annotatedHTML, sentenceCards, nounsMap, adjMap, verbsMap });
+    renderResults({ annotatedHTML, sentenceFacts, nounsMap, adjMap, verbsMap, pronMap, advMap, prepMap, detMap, conjMap });
+    translateSentences(sentences.map(s => s.text));
   } catch (err) {
     errorBox.textContent = 'حدث خطأ أثناء التحليل: ' + err.message;
     errorBox.style.display = 'block';
   }
 }
 
-function renderResults({ annotatedHTML, sentenceCards, nounsMap, adjMap, verbsMap }){
+function renderResults({ annotatedHTML, sentenceFacts, nounsMap, adjMap, verbsMap, pronMap, advMap, prepMap, detMap, conjMap }){
   document.getElementById('annotated').innerHTML = annotatedHTML;
 
-  document.getElementById('sentenceInfo').innerHTML = sentenceCards.map(c => `
-    <div class="sentenceCard">
-      <span class="cardNum">${c.num}</span>
+  document.getElementById('sentenceInfo').innerHTML = sentenceFacts.map(c => `
+    <div class="factRow">
+      <span class="vNum">${c.num}</span>
       <div>
-        <p class="cardSentence">${c.text}</p>
-        <p class="cardMeta"><b>الفاعل:</b> ${c.subject} &nbsp;•&nbsp; <b>الزمن:</b> ${c.tense.ar} <span class="enTag">(${c.tense.en})</span></p>
+        <p class="factSentence">${escapeHTML(c.text)}</p>
+        <p class="factMeta"><b>الفاعل:</b> ${escapeHTML(c.subject)} &nbsp;•&nbsp; <b>الزمن:</b> ${c.tense.ar} <span class="enTag">(${c.tense.en})</span></p>
       </div>
     </div>`).join('');
 
-  const nounRows = Object.values(nounsMap).map(n => `<tr><td>${n.word}</td><td>${n.type}</td><td>${n.count}</td></tr>`).join('')
+  const nounRows = Object.values(nounsMap).map(n => `<tr><td>${escapeHTML(n.word)}</td><td>${n.type}</td><td>${n.count}</td></tr>`).join('')
     || '<tr><td colspan="3">لا توجد أسماء</td></tr>';
   document.querySelector('#nounsTable tbody').innerHTML = nounRows;
 
-  const adjRows = Object.values(adjMap).map(a => `<tr><td>${a.word}</td><td>${a.degree}</td><td>${a.count}</td></tr>`).join('')
+  const adjRows = Object.values(adjMap).map(a => `<tr><td>${escapeHTML(a.word)}</td><td>${a.degree}</td><td>${a.count}</td></tr>`).join('')
     || '<tr><td colspan="3">لا توجد صفات</td></tr>';
   document.querySelector('#adjTable tbody').innerHTML = adjRows;
 
-  const verbRows = Object.values(verbsMap).map(v => `<tr><td>${v.used}</td><td>${v.v1}</td><td>${v.v2}</td><td>${v.v3}</td><td>${v.tense}</td></tr>`).join('')
+  const verbRows = Object.values(verbsMap).map(v => `<tr><td>${escapeHTML(v.used)}</td><td>${v.v1}</td><td>${v.v2}</td><td>${v.v3}</td><td>${v.tense}</td></tr>`).join('')
     || '<tr><td colspan="5">لا توجد أفعال</td></tr>';
   document.querySelector('#verbsTable tbody').innerHTML = verbRows;
 
+  const simpleRows = (map, emptyMsg) => Object.values(map).map(x => `<tr><td>${escapeHTML(x.word)}</td><td>${x.count}</td></tr>`).join('') || `<tr><td colspan="2">${emptyMsg}</td></tr>`;
+  document.querySelector('#pronTable tbody').innerHTML = simpleRows(pronMap, 'لا توجد ضمائر');
+  document.querySelector('#advTable tbody').innerHTML = simpleRows(advMap, 'لا توجد ظروف');
+  document.querySelector('#prepTable tbody').innerHTML = simpleRows(prepMap, 'لا توجد حروف جر');
+  document.querySelector('#detTable tbody').innerHTML = simpleRows(detMap, 'لا توجد أدوات تعريف/تنكير');
+  document.querySelector('#conjTable tbody').innerHTML = simpleRows(conjMap, 'لا توجد حروف عطف');
+
   document.getElementById('results').hidden = false;
   document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function translateOne(text){
+  try {
+    const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|ar`);
+    const data = await res.json();
+    return (data && data.responseData && data.responseData.translatedText) ? data.responseData.translatedText : 'تعذرت الترجمة';
+  } catch (e) {
+    return 'تعذرت الترجمة (تحقق من الاتصال بالإنترنت)';
+  }
+}
+
+async function translateSentences(texts){
+  for (let i = 0; i < texts.length; i++) {
+    const txt = await translateOne(texts[i]);
+    const el = document.querySelector(`#trans-${i} .txt`);
+    if (el) el.textContent = txt;
+  }
 }
 
 document.getElementById('analyzeBtn').addEventListener('click', analyze);
@@ -401,7 +563,6 @@ document.getElementById('input').addEventListener('keydown', e => {
   if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) analyze();
 });
 
-/* in case the script tag's onload already fired before this ran (cached script) */
 if (typeof nlp !== 'undefined') engineLoaded();
 </script>
 </body>
